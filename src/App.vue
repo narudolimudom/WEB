@@ -135,7 +135,7 @@ export default {
             resp.data[index].name
           );
           this.$store.dispatch('feedDataToHospitalImage',resp.data[index].image)
-          this.$store.dispatch('feedDataTosSetShowData',resp.data[index].show_data)
+          // this.$store.dispatch('feedDataTosSetShowData',resp.data[index].show_data)///ไม่แน่นใจ
         } 
          this.$store.dispatch("feedDataToKeyList",Object.keys(resp.data[0].show_data))
           this.$store.state.ColorSplit =  this.CalculateColor(resp.data.length)

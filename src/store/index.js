@@ -23,7 +23,9 @@ export default new Vuex.Store({
     HospitalImage: [],
     HospitalIndex: null,
     ShowInfoToggle: false,
-    ShowData: [],//////ไม่ใช้แล้ว
+    ShowData: [],//////ไม่ใช้แล้ว,
+    testColor:[],//
+    testHospital: [],///
 
   },
   mutations: {

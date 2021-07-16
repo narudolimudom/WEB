@@ -31,6 +31,7 @@
           </v-btn-toggle>
         </l-control>
         <l-marker
+         :visible="ShowCondition(index)"
           @click="
             MoveToMakerByIndex(index);
             SendHospitalNameForControlSelect(index);
@@ -98,12 +99,15 @@ export default {
       allHospitalData: [],
       HospitalIdSelectMarker: null,
         toggle_exclusive: [],
+        HospitalByRegion: [],
     };
   },
 
   mounted() {
     this.HospitalCoordinates = this.$store.getters.GetallHospitalCoordinates;
     this.allHospitalData = this.$store.getters.GetallHospitalAllData;
+    this.HospitalByRegion = this.$store.getters.GetallHospitalAllData;
+    this.Hospitalselect(this.$store.getters.GetRegionSelect);
   },
 
   computed: {
@@ -113,6 +117,9 @@ export default {
     WatchValuefromFlyTo() {
       return this.$store.getters.GetRegionFlyTo;
     },
+      WatchRegionSelect(){
+      return this.$store.getters.GetRegionSelect
+    }
   },
 
   methods: {
@@ -168,10 +175,15 @@ export default {
         var max =   this.GetMax()
         var min = this.GetMin()
         // var i = this.allHospitalData.length
-        for (let index = this.allHospitalData.length-1; index >= 0; index--) {
-          switch (true){
-          case showdata >= (index/this.allHospitalData.length)*(max-min)+min && showdata <= ((index+1)/this.allHospitalData.length)*(max-min)+min: return this.$store.getters.GetColorSplit[index]; 
-        }
+         for (let index = 0; index < this.HospitalByRegion.length; index++) {
+          switch (true) {
+            case showdata >= (4/5.0)*(max-min)+min  && showdata <= max: return '#2bd500';
+            case showdata >= (3/5.0)*(max-min)+min  && showdata <= (4/5.0)*(max-min)+min: return '#55aa00';
+            case showdata >= (2/5.0)*(max-min)+min  && showdata <= (3/5.0)*(max-min)+min: return '#7f8000';
+            case showdata >= (1/5.0)*(max-min)+min  && showdata <= (2/5.0)*(max-min)+min: return '#aa5500';
+            case showdata >=  min  && showdata <= (1/5.0)*(max-min)+min: return '#d52b00';
+           
+          }
       //  switch (true) {
       //   case showdata >= (3/4.0)*(max-min)+min: return '#33a400'
       //   case showdata >=(2/4.0)*(max-min)+min && showdata < (3/4.0)*(max-min)+min: return '#667b00'
@@ -190,17 +202,32 @@ export default {
     },
 
     GetMax(){
-      var dataValue = this.allHospitalData.map((item) => item.show_data[this.$store.getters.GetKeyList[this.$store.state.KeyForChart]])
+      var dataValue = this.HospitalByRegion.map((item) => item.show_data[this.$store.getters.GetKeyList[this.$store.state.KeyForChart]])
       return Math.max(...dataValue)
       
     },
      GetMin(){
-      var dataValue = this.allHospitalData.map((item) => item.show_data[this.$store.getters.GetKeyList[this.$store.state.KeyForChart]])
+      var dataValue = this.HospitalByRegion.map((item) => item.show_data[this.$store.getters.GetKeyList[this.$store.state.KeyForChart]])
       return Math.min(...dataValue)
       
     },
     SetToggle(){
       this.$store.dispatch('feedDataToShowInfoToggle',true)
+    },
+
+    ShowCondition(id){
+      if ((this.$store.getters.GetRegionSelect ==  this.allHospitalData[id].region) || (this.$store.getters.GetRegionSelect == 'All')) {
+        return true
+      }else {
+        return false
+      }
+    },
+    Hospitalselect(region){
+         if (region == 'All') {
+         this.HospitalByRegion = this.allHospitalData
+       }else{
+        this.HospitalByRegion = this.allHospitalData.filter(hospital => hospital.region == region)
+       }
     }
 
   },
@@ -216,6 +243,9 @@ export default {
     WatchValuefromFlyTo(object) {
       this.$refs.map.mapObject.flyTo(object.coord, object.zoom);
     },
+        WatchRegionSelect(region){
+    this.Hospitalselect(region);
+    }
   },
 };
 </script>
