@@ -1,25 +1,27 @@
 <template>
   <div class="small">
-    <h3>ระดับประเทศ</h3>
+    <h3>{{"ระดับ : " + this.$store.getters.GetNameOFzone}}</h3>
     <LineChart
       :labelchart="labelchart"
       :label="dataLabel"
       :data="dataChart"
       :options="{responsive: true, maintainAspectRatio: false}"
       :chartcolor='chartcolor'
+      :anotherdata='anotherData'
+      :anotherlabel='anotherLebel'
+      :anothercolor='anotherColor'
 
     ></LineChart>
-    <div class="btn pt-10">
-       <v-btn
-            @click="SelectKeyForChart(index)"
-            class="mapButton mr-1"
-            v-for="(key, index) in this.$store.getters.GetKeyList"
-            :key="'A' + index"
-            small
-            elevation="3"
-            color=""
-            >{{ key }}</v-btn
-          >
+    
+    <div class="btn pt-2 ">
+      <h4>จัดลำดับตามจำนวน</h4>
+
+          <v-radio-group row dense class="radio ">
+        <v-radio class="ra" @click="SelectKeyForChart(index)" :label="key" :value="key" :color="getColorRadio(index)" v-for="(key, index) in this.$store.getters.GetKeyList" :key="'A' + index"  ></v-radio>
+        
+      </v-radio-group>
+
+ 
     </div>
   </div>
 </template>
@@ -64,12 +66,16 @@ export default {
       dataLabel: [],
       chartcolor: null,
       HospitalByRegion:[],
+      anotherData:[],
+      anotherLebel:[],
+      anotherColor:[],
+      NameOFzone: 'ระดับประเทศ',
     };
   },
   methods: {
     changeData(){
        var KeyList = [];
-       var ColorArr =[];
+      //  var ColorArr =[];
       KeyList.push(Object.keys(this.HospitalByRegion[0].show_data));
       this.labelchart = KeyList[0][this.$store.getters.GetKeyForChart];
       this.sortData = this.HospitalByRegion
@@ -81,11 +87,36 @@ export default {
         // .slice(0, 10)
       
       this.dataLabel = this.sortData.map(item => item.name);
+
+
+      
       this.dataChart = this.sortData.map(item => item.show_data[this.labelchart])
-      for (let index = 0; index < this.HospitalByRegion.length; index++) {
-        ColorArr.push(this.colors(this.dataChart[index]))
+      // for (let index = 0; index < this.HospitalByRegion.length; index++) {
+      //   ColorArr.push(this.colors(this.dataChart[index]))
+      // }                
+      
+
+      this.chartcolor = this.allData[0].colors[this.labelchart]
+       this.anotherData = []
+       this.anotherLebel=[]
+       this.anotherColor=[]
+      for (let index = 0; index < KeyList[0].length; index++) {
+        if (this.labelchart != KeyList[0][index]) {
+            this.anotherData.push((this.sortData.map(item => item.show_data[KeyList[0][index]])))
+           this.anotherLebel.push(KeyList[0][index])
+          //  if(KeyList[0][index] == this.allData[0].colors[])
+           this.anotherColor.push(this.allData[0].colors[KeyList[0][index]])
+
+        }
+
+        // this.anotherColor.push(this.$store.getters.GetColorSplit[index+1])
+        
       }
-      this.chartcolor = ColorArr
+      
+      
+
+      
+      
       
   },
   
@@ -129,7 +160,9 @@ export default {
       // this.$store.dispatch('feedDatatToKeyForChart',index)
       this.$store.state.KeyForChart = index;
     },
-
+    getColorRadio(index){
+        return this.allData[0].colors[this.$store.getters.GetKeyList[index]]
+    }
 
 
 
@@ -144,6 +177,7 @@ export default {
       this.$store.dispatch("feedDataToKeyList",Object.keys(resp.data[0].show_data))
       this.HospitalByRegion = resp.data
       // this.chartcolor = colors()
+     
     this.changeData();
     });
 
@@ -152,3 +186,18 @@ export default {
     
 };
 </script>
+
+<style scoped>
+.radio >>> label{
+ font-size: 12px;
+ 
+  padding-left: 0px;
+}
+
+.btn {
+
+    display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+</style>

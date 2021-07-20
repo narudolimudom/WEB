@@ -5,7 +5,7 @@
     </template>
 
     <v-list>
-      <v-list-item v-for="(item, i) in items" :key="i" link router @click="RegionSelector(item.coord, item.zoom, item.region); selectName(item.title)">
+      <v-list-item v-for="(item, i) in items" :key="i" link router @click="RegionSelector(item.coord, item.zoom, item.region, item.title); selectName(item.title)">
         <v-list-item-title>{{item.title}}</v-list-item-title>
       </v-list-item>
     </v-list>
@@ -32,9 +32,10 @@ export default {
   },
 
   methods:{
-    RegionSelector(coord,zoom,region){
+    RegionSelector(coord,zoom,region,title){
         this.$store.dispatch('feedDataToRegionFlyTo',{coord,zoom})
         this.$store.dispatch('feedDataToRegionSelect',region)
+        this.$store.dispatch('feedDataTosetNameOFzone',title)
         
     },
     selectName(name){

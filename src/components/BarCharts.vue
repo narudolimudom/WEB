@@ -2,14 +2,16 @@
 import { HorizontalBar } from "vue-chartjs";
 export default {
   extends: HorizontalBar,
-  props: ["data", "options", 'label', 'chartcolor','labelchart'],
-//   data() {
-//       return {
-//           chartData: [1,2,3,4,5,6,7,8,9,10,11,12]
-//       }
-//   },
+  props: ["data", "options ", 'label', 'chartcolor','labelchart','anotherdata','anotherlabel','anothercolor'],
+  data() {
+      return {
+          SortedChart:[],
+      }
+  },
   mounted() {
+
     this.renderLineChart();
+
   },
   computed: {
     chartData: function () {
@@ -23,15 +25,23 @@ export default {
     },
     ChartName: function(){
       return this.labelchart
+    },
+    AnotherData: function(){
+      return this.anotherdata
+    },
+    AnotherLebel: function(){
+      return this.anotherlabel
+    },
+    AnotherColor: function(){
+      return this.anothercolor
     }
     
   },
   methods: {
+
+    
     renderLineChart: function() {
-    this.renderChart(
-      {
-        labels: this.charLabel,
-        datasets: [
+      this.SortedChart = [
           {
             
   
@@ -40,17 +50,31 @@ export default {
             pointBorderColor: '#2554FF',
             data: this.chartData,
             backgroundColor: this.ChartColor
+ 
           },
-          //   {
+
+          
+        ]
+
+        for (let index = 0; index < this.AnotherData.length; index++) {
+          this.SortedChart.push({
             
   
-          //   label: this.ChartName,
-          //   borderWidth: 1,
-          //   pointBorderColor: '#2554FF',
-          //   data: [20,54,87,99,15,17,68],
-          //   backgroundColor: this.ChartColor
-          // }
-        ]
+            label: this.AnotherLebel[index],
+            borderWidth: 1,
+            pointBorderColor: '#2554FF',
+            data: this.AnotherData[index],
+            backgroundColor: this.AnotherColor[index]
+ 
+          },)
+          
+        }
+        
+
+    this.renderChart(
+      {
+        labels: this.charLabel,
+        datasets: this.SortedChart
       },
         {
 

@@ -31,22 +31,25 @@
     </template>
   </v-simple-table>
   </div>
-  <div class="moredetails  mt-15">
-<p>{{"โทร : " + $store.getters.GetallHospitalAllData[$store.getters.GetHospitalIndex].tel}}</p><br>
+  <div class="moredetails  mt-8">
 <h3>ที่อยู่</h3>
 <p>{{$store.getters.GetallHospitalAllData[$store.getters.GetHospitalIndex].address}}</p>
+  <p>{{"โทร : " + $store.getters.GetallHospitalAllData[$store.getters.GetHospitalIndex].tel}}</p><br>
+  <v-btn @click="Reset()" small elevation="5" dark color="#4B86AA">ย้อนกลับ</v-btn>
   </div>
+  
   </div>
 </template>
 
 <script>
 export default {
 name: 'showinfo',
-data() {
-    return {
-       
-    }
-},
+
+methods:{
+  Reset(){
+    this.$store.dispatch('feedDataToShowInfoToggle',false)
+  }
+}
 }
 </script>
 

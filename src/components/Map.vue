@@ -6,6 +6,7 @@
         :zoom="zoom"
         :center="center"
         :options="mapOptions"
+        :minZoom= '5'
         style="height: 80%"
         @update:center="centerUpdate"
         @update:zoom="zoomUpdate"
@@ -30,6 +31,20 @@
           >
           </v-btn-toggle>
         </l-control>
+          <l-control position="bottomright"
+        ><v-card style="padding: 1rem" color="#CFD8DC">
+          <h4 style="padding-bottom: 1em; text-align: center">{{$store.getters.GetKeyList[$store.getters.GetKeyForChart]}}</h4>
+          <i style="background: #f6f7d4">&emsp;</i
+          ><span style="margin-left: 1em">{{GetMin()}}-{{Math.round((1 / 5) * (GetMax() - GetMin()) + GetMin())}}</span><br />
+          <i style="background: #d2f6c5">&emsp;</i
+          ><span style="margin-left: 1em">{{Math.round((1 / 5) * (GetMax() - GetMin()) + GetMin())+1}}-{{Math.round((2 / 5) * (GetMax() - GetMin()) + GetMin())}}</span><br />
+          <i style="background: #99f3bd">&emsp;</i
+          ><span style="margin-left: 1em">{{Math.round((2 / 5) * (GetMax() - GetMin()) + GetMin())+1}}-{{Math.round((3 / 5) * (GetMax() - GetMin()) + GetMin())}}</span><br />
+          <i style="background: #28df99">&emsp;</i
+          ><span style="margin-left: 1em">{{Math.round((3 / 5) * (GetMax() - GetMin()) + GetMin())+1}}-{{Math.round((4 / 5) * (GetMax() - GetMin()) + GetMin())}}</span><br />
+          <i style="background: #2ec1ac">&emsp;</i
+          ><span style="margin-left: 1em">{{Math.round((4 / 5) * (GetMax() - GetMin()) + GetMin())+1}}-{{Math.round(GetMax())}}</span></v-card
+        ></l-control>
         <l-marker
          :visible="ShowCondition(index)"
           @click="
@@ -48,12 +63,11 @@
         </l-marker>
         <l-control></l-control>
         <l-polygon
-          v-for="(region, i) in region_polygon"
+          v-for="(region, i) in Polygons"
           :key="i + 'a'"
-          :visible="region.id == send_region_id_to_map"
-          :lat-lngs="get_polygon_coord(i)"
-          :color="get_polygon_color(i)"
-          :options="syle_polygon"
+          :visible="ShowRegion(i)"
+          :lat-lngs="region.latlngs"
+          :options="style_polygon"
         ></l-polygon>
       </l-map>
     </div>
@@ -61,6 +75,7 @@
 </template>
 
 <script>
+import Polygons from '../assets/Regions_Thailand_poly.json'
 import { LMap, LTileLayer, LMarker, LTooltip, LControl } from "vue2-leaflet";
 import { Icon, latLng } from "leaflet";
 import L from "leaflet";
@@ -100,6 +115,13 @@ export default {
       HospitalIdSelectMarker: null,
         toggle_exclusive: [],
         HospitalByRegion: [],
+        Polygons,
+        style_polygon:{
+      weight: 0.5,
+      opacity: 0.02,
+      fillColor: "#FFD700",
+    }
+        
     };
   },
 
@@ -132,7 +154,7 @@ export default {
     MoveToMakerByIndex(index) {
       this.$refs.map.mapObject.flyTo(
         this.allHospitalData[index].coordinates,
-        12
+      8
       );
     },
     SendHospitalNameForControlSelect(index) {
@@ -177,11 +199,11 @@ export default {
         // var i = this.allHospitalData.length
          for (let index = 0; index < this.HospitalByRegion.length; index++) {
           switch (true) {
-            case showdata >= (4/5.0)*(max-min)+min  && showdata <= max: return '#2bd500';
-            case showdata >= (3/5.0)*(max-min)+min  && showdata <= (4/5.0)*(max-min)+min: return '#55aa00';
-            case showdata >= (2/5.0)*(max-min)+min  && showdata <= (3/5.0)*(max-min)+min: return '#7f8000';
-            case showdata >= (1/5.0)*(max-min)+min  && showdata <= (2/5.0)*(max-min)+min: return '#aa5500';
-            case showdata >=  min  && showdata <= (1/5.0)*(max-min)+min: return '#d52b00';
+            case showdata >= (4/5.0)*(max-min)+min  && showdata <= max: return '#2ec1ac';
+            case showdata >= (3/5.0)*(max-min)+min  && showdata <= (4/5.0)*(max-min)+min: return '#28df99';
+            case showdata >= (2/5.0)*(max-min)+min  && showdata <= (3/5.0)*(max-min)+min: return '#99f3bd';
+            case showdata >= (1/5.0)*(max-min)+min  && showdata <= (2/5.0)*(max-min)+min: return '#d2f6c5';
+            case showdata >=  min  && showdata <= (1/5.0)*(max-min)+min: return '#f6f7d4';
            
           }
       //  switch (true) {
@@ -228,6 +250,13 @@ export default {
        }else{
         this.HospitalByRegion = this.allHospitalData.filter(hospital => hospital.region == region)
        }
+    },
+    ShowRegion(i){
+      if ((this.Polygons[i].Region == this.$store.getters.GetRegionSelect) ||  this.$store.getters.GetRegionSelect == "All") {
+        return true
+      }else{
+        return false
+      }
     }
 
   },
