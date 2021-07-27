@@ -31,6 +31,7 @@ export default {
     };
   },
 
+
   methods:{
     RegionSelector(coord,zoom,region,title){
         this.$store.dispatch('feedDataToRegionFlyTo',{coord,zoom})

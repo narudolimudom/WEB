@@ -53,6 +53,7 @@ export default {
         this.HospitalByRegion = this.allData.filter(hospital => hospital.region == region)
        }
        this.changeData();
+       
     }
   },
 
@@ -70,6 +71,7 @@ export default {
       anotherLebel:[],
       anotherColor:[],
       NameOFzone: 'ระดับประเทศ',
+      JsonColor: [],
     };
   },
   methods: {
@@ -96,7 +98,7 @@ export default {
       // }                
       
 
-      this.chartcolor = this.allData[0].colors[this.labelchart]
+      this.chartcolor = this.JsonColor[this.labelchart]
        this.anotherData = []
        this.anotherLebel=[]
        this.anotherColor=[]
@@ -105,7 +107,7 @@ export default {
             this.anotherData.push((this.sortData.map(item => item.show_data[KeyList[0][index]])))
            this.anotherLebel.push(KeyList[0][index])
           //  if(KeyList[0][index] == this.allData[0].colors[])
-           this.anotherColor.push(this.allData[0].colors[KeyList[0][index]])
+           this.anotherColor.push(this.JsonColor[KeyList[0][index]])
 
         }
 
@@ -161,7 +163,7 @@ export default {
       this.$store.state.KeyForChart = index;
     },
     getColorRadio(index){
-        return this.allData[0].colors[this.$store.getters.GetKeyList[index]]
+        return this.JsonColor[this.$store.getters.GetKeyList[index]]
     }
 
 
@@ -173,11 +175,16 @@ export default {
     this.$store.dispatch("feedDatatToKeyForChart", 0);  //inital show data
     
     axios.get(this.$store.getters.GetURLdata).then((resp) => {
-      this.allData = resp.data;
-      this.$store.dispatch("feedDataToKeyList",Object.keys(resp.data[0].show_data))
-      this.HospitalByRegion = resp.data
-      // this.chartcolor = colors()
-     
+      this.allData = resp.data.info;
+      this.JsonColor = resp.data.colors;
+      this.$store.dispatch("feedDataToKeyList",Object.keys(resp.data.info[0].show_data))
+      
+      this.HospitalByRegion = resp.data.info
+
+      if(this.$store.getters.GetRegionSelect != 'All'){
+       this.HospitalByRegion = this.allData.filter(hospital => hospital.region == this.$store.getters.GetRegionSelect)
+      }// this.chartcolor = colors()
+      console.log(this.$store.getters.GetNameOFzone);
     this.changeData();
     });
 

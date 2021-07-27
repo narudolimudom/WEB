@@ -2,7 +2,7 @@
   <v-app>
     <v-app-bar app color="#294D65" dark class="appbar">
       <div class="d-flex align-center">
-        <v-img
+        <v-img 
           alt="Vuetify Logo"
           class="shrink mr-2"
           contain
@@ -99,10 +99,6 @@ export default {
         { title: "ภาคตะวันตก", link: "/westregion", id: 4 },
         { title: "ภาคใต้", link: "/southregion", id: 6 },
       ],
-      data_url_for_axios:
-        "https://raw.githubusercontent.com/narudolimudom/Hospital/main/Thailand_Hospital.json",
-      URL_for_axios:
-        "https://raw.githubusercontent.com/narudolimudom/Hospital/main/Thailand_Hospital.json",
       hospital_name: [],
       value: null,
       id_from_marker: null,
@@ -112,10 +108,7 @@ export default {
       send_hospital_ids: null,
       hospital_ids: [],
       zoom_map_value: null,
-      hospital_detels: "-",
-      hospital_tels: "-",
-      get_hos_all_data: [],
-      Storecolor:[],
+      
     };
   },
 
@@ -124,23 +117,23 @@ export default {
     axios
       .get(
         this.$store.getters.GetURLdata ).then((resp) => {
-        for (let index = 0; index < resp.data.length; index++) {
-          this.$store.dispatch("feedDataToallHospitalData", resp.data[index]);
+        for (let index = 0; index < resp.data.info.length; index++) {
+          this.$store.dispatch("feedDataToallHospitalData", resp.data.info[index]);
         
         
         
         
         this.$store.dispatch(
             "feedDataToHospitalCoordinates",
-            resp.data[index].coordinates
+            resp.data.info[index].coordinates
           );
           this.$store.dispatch(
             "feetDataToHospitalNames",
-            resp.data[index].name
+            resp.data.info[index].name
           );
-          this.$store.dispatch('feedDataToHospitalImage',resp.data[index].image)
+          this.$store.dispatch('feedDataToHospitalImage',resp.data.info[index].image)
         } 
-         this.$store.dispatch("feedDataToKeyList",Object.keys(resp.data[0].show_data))
+         this.$store.dispatch("feedDataToKeyList",Object.keys(resp.data.info[0].show_data))
 
       });
 
@@ -150,7 +143,10 @@ export default {
   methods: {
   
     Reset(){
+        var coord= [14.291228795166935, 101.25946999245441];
+        var  zoom = 6;
       this.$store.dispatch('feedDataToShowInfoToggle',false)
+      this.$store.dispatch('feedDataToRegionFlyTo',{coord,zoom})
    }
 
   },

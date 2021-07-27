@@ -13,7 +13,7 @@ export default new Vuex.Store({
     RegionFlyTo: [],
     KeyList: [],
     KeyForChart: 0,
-    urlData: 'https://raw.githubusercontent.com/narudolimudom/Hospital/main/%E0%B9%87%E0%B9%87%E0%B9%89okHospital.json',
+    urlData: 'https://raw.githubusercontent.com/narudolimudom/Hospital/main/NewFormHospital.json',
     chartdata:{},
     options:{},
     ColorSplit:[],
@@ -23,9 +23,6 @@ export default new Vuex.Store({
     HospitalImage: [],
     HospitalIndex: null,
     ShowInfoToggle: false,
-    ShowData: [],//////ไม่ใช้แล้ว,
-    testColor:[],//
-    testHospital: [],///
     NameOFzone: 'ระดับประเทศ',
     
     
@@ -85,9 +82,6 @@ export default new Vuex.Store({
     },
     setShowInfoToggle(state,boo){
       state.ShowInfoToggle = boo
-    },
-    setShowData(state,data){
-      state.ShowData.push(data)
     },
     setNameOFzone(state,data){
       state.NameOFzone = data 
@@ -152,9 +146,6 @@ export default new Vuex.Store({
     feedDataToShowInfoToggle(context,value){
       context.commit('setShowInfoToggle',value)
     },
-    feedDataTosSetShowData(context,value){
-      context.commit('setShowData',value)
-    },
     feedDataTosetNameOFzone(context,valuue){
       context.commit('setNameOFzone',valuue)
     }
@@ -217,9 +208,6 @@ export default new Vuex.Store({
     },
     GetShowInfoToggle(state){
       return state.ShowInfoToggle
-    },
-    GetShowData(state){
-      return state.ShowData
     },
     GetNameOFzone(state){
       return state.NameOFzone
