@@ -6,7 +6,6 @@
           alt="Vuetify Logo"
           class="shrink mr-2"
           contain
-          src="./assets/mislogo.png"
           transition="scale-transition"
           width="120"
           @click="Reset()"
