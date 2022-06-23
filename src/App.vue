@@ -11,7 +11,7 @@
           width="120"
           @click="Reset()"
         />
-        <h1>sefast</h1>
+        <h1>sdfsssgkk</h1>
       </div>
       <v-spacer></v-spacer>
     </v-app-bar>
