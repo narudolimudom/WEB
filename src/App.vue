@@ -2,17 +2,10 @@
   <v-app>
     <v-app-bar app color="#294D65" dark class="appbar">
       <div class="d-flex align-center">
-        <v-img 
-          alt="Vuetify Logo"
-          class="shrink mr-2"
-          contain
-          src="./assets/mislogo.png"
-          transition="scale-transition"
-          width="120"
-          @click="Reset()"
-        />
+
         <h1>sdfsssgkk</h1>
          <h1>sdfsssgkk</h1> <h1>sdfsssgkk</h1> <h1>sdfsssgkk</h1> <h1>sdfsssgkk</h1>
+         <p>กิตบ้า</p>
          <h1>sdfsssgkk</h1> <h1>sdfsssgkk</h1> <h1>sdfsssgkk</h1> <h1>sdfsssgkk</h1>
          <h1>sdfsssgkk</h1> <h1>sdfsssgkk</h1> <h1>sdfsssgkk</h1> <h1>sdfsssgkk</h1>
          <h1>sdfsssgkk</h1> <h1>sdfsssgkk</h1> <h1>sdfsssgkk</h1> <h1>sdfsssgkk</h1>
